@@ -1,5 +1,7 @@
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
+import Header from "../../components/layout/header";
+import Footer from "../../components/layout/footer";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -13,12 +15,12 @@ export const metadata = {
     "Digital financial services platform providing secure solutions for global transactions, gift card trading, and cryptocurrency exchange.",
 };
 
-export default function RootLayout({ children }) {
+export default function ViewsLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} antialiased`}>
+      <main className={`${inter.variable} antialiased`}>
+        <Header />
         {children}
-      </body>
-    </html>
+        <Footer />
+      </main>
   );
 }
