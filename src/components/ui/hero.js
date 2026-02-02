@@ -37,7 +37,7 @@ export default function HeroSection() {
         {/* CTA button */}
         <div className="mt-12 flex justify-center">
           <Link
-            href="/get-started"
+            href="/auth/register"
             className="rounded-full bg-[#0a335c] px-14 py-4 text-base font-medium text-white transition-all duration-300 hover:scale-105 hover:bg-[#063f79]"
           >
             Get started

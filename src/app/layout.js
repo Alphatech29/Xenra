@@ -1,5 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import ToastProvider from "../providers/toastProvider";
+import { AuthProvider } from "../lib/authContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -17,7 +19,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
-        {children}
+        <AuthProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </AuthProvider>
       </body>
     </html>
   );

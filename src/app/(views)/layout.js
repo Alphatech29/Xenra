@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "../globals.css";
 import Header from "../../components/layout/header";
 import Footer from "../../components/layout/footer";
+import Preloader from "../../components/ui/preloader";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -18,6 +19,7 @@ export const metadata = {
 export default function ViewsLayout({ children }) {
   return (
       <main className={`${inter.variable} antialiased`}>
+        <Preloader/>
         <Header />
         {children}
         <Footer />
