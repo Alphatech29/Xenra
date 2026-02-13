@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import Input from "../../../../components/ui/inputField";
 import Button from "../../../../components/ui/button";
@@ -256,11 +257,15 @@ export default function RegisterPage() {
           <div className="text-center mt-4">
             <p className="text-sm text-gray-500 mb-6">
               Already have an account?{" "}
-              <span className="text-[#0b0196] font-medium cursor-pointer">
+              <Link
+                href="/auth/login"
+                className="text-[#0b0196] font-medium hover:underline"
+              >
                 Log In
-              </span>
+              </Link>
             </p>
           </div>
+
         </div>
       </div>
     </main>

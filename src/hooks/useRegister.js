@@ -18,7 +18,7 @@ export function useRegister() {
     setData(null);
 
     try {
-      const res = await fetch(`${API_URL}/auth/create-user`, {
+      const res = await fetch(`${API_URL}/api/v1/auth/create-user`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

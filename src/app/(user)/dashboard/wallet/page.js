@@ -1,93 +1,196 @@
 "use client";
 
 import { useState } from "react";
-import { FaWallet, FaArrowUp, FaArrowDown, FaPlus } from "react-icons/fa";
+import useUserWallet from "../../../../hooks/userWalletHooks";
+import { formatNaira } from "../../../../lib/formatNaira";
+
+/* -------------------------------------------------------------------------- */
+/*                         Demo Crypto Wallet Data                             */
+/* -------------------------------------------------------------------------- */
+
+const DEMO_CRYPTO_WALLETS = [
+  {
+    name: "Bitcoin",
+    symbol: "BTC",
+    network: "Bitcoin",
+    address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    minDeposit: "0.0001 BTC",
+    warning:
+      "Send only BTC to this address. Sending other assets may result in permanent loss.",
+  },
+  {
+    name: "USDT",
+    symbol: "USDT",
+    network: "TRC20",
+    address: "TQ7Zc4X7b7A3R4xK9j9H6R5nQ3wJdE5mYF",
+    minDeposit: "10 USDT",
+    warning:
+      "Only send USDT via TRC20 network. Sending via another network may cause loss.",
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/*                               Page                                         */
+/* -------------------------------------------------------------------------- */
 
 export default function WalletPage() {
-  const [balance] = useState(12500.75);
+  const [copied, setCopied] = useState("");
+  const { wallet } = useUserWallet();
 
-  const transactions = [
-    { id: 1, type: "credit", title: "Payment Received", amount: 2500, date: "Feb 1, 2026" },
-    { id: 2, type: "debit", title: "Online Purchase", amount: 1200, date: "Jan 30, 2026" },
-    { id: 3, type: "debit", title: "Transfer", amount: 800, date: "Jan 28, 2026" },
-  ];
+  const balance = wallet?.available_balance ?? 0;
+
+  const cryptoWallets =
+    wallet?.cryptoWallets && wallet.cryptoWallets.length > 0
+      ? wallet.cryptoWallets
+      : DEMO_CRYPTO_WALLETS;
+
+  const copy = async (value, key) => {
+    if (!value || typeof window === "undefined") return;
+
+    await navigator.clipboard.writeText(value);
+    setCopied(key);
+
+    setTimeout(() => setCopied(""), 2000);
+  };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-950 to-slate-900 text-white p-6">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <div className="min-h-screen p-4">
+      {/* Header */}
+      <header className="mb-3">
+        <h1 className="text-2xl font-bold text-secondary-900">
+          Wallet Overview
+        </h1>
+      </header>
 
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-indigo-600/20">
-              <FaWallet className="w-6 h-6 text-indigo-400" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-semibold">Wallet</h1>
-              <p className="text-sm text-slate-400">Digital wallet overview</p>
-            </div>
-          </div>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 transition">
-            <FaPlus className="w-4 h-4" /> Fund Wallet
-          </button>
-        </div>
-
+      {/* Balance & Bank */}
+      <section className="grid gap-6 md:grid-cols-2">
         {/* Balance */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div>
-            <p className="text-sm text-slate-400">Available Balance</p>
-            <h2 className="text-4xl font-bold">₦{balance.toLocaleString()}</h2>
+        <div className="rounded-2xl bg-linear-to-br from-secondary-700 to-primary-900 p-6 text-silver-50 shadow-lg">
+          <div className="flex items-center justify-between">
+            <p className="text-sm opacity-80">Available Balance</p>
+            <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-xs text-emerald-100">
+              {wallet?.status ?? "Active"}
+            </span>
           </div>
-          <div className="flex gap-3">
-            <button className="flex items-center gap-2 px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 transition">
-              <FaArrowUp className="w-4 h-4" /> Send
+
+          <h2 className="mt-2 text-3xl font-bold">
+           <span className="text-lg font-semibold">₦</span>{formatNaira(balance)}
+          </h2>
+
+          <p className="mt-1 text-xs opacity-70">
+            Updated {wallet?.lastUpdated ?? "—"}
+          </p>
+
+          <div className="mt-6 flex gap-4">
+            <button className="rounded-lg bg-white px-4 py-1.5 font-medium text-primary-700 hover:bg-secondary-100">
+              Fund Wallet
             </button>
-            <button className="flex items-center gap-2 px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 transition">
-              <FaArrowDown className="w-4 h-4" /> Receive
+            <button className="rounded-lg border border-white px-4 py-1.5 font-medium text-white transition hover:bg-primary-300">
+              Withdraw
             </button>
           </div>
         </div>
 
-        {/* Transactions */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
-          <h3 className="text-lg font-semibold mb-4">Recent Transactions</h3>
-          <div className="space-y-4">
-            {transactions.map((tx) => (
-              <div
-                key={tx.id}
-                className="flex items-center justify-between p-4 rounded-xl bg-slate-800/60 hover:bg-slate-800 transition"
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`p-2 rounded-full ${
-                      tx.type === "credit"
-                        ? "bg-green-500/20 text-green-400"
-                        : "bg-red-500/20 text-red-400"
-                    }`}
-                  >
-                    {tx.type === "credit" ? (
-                      <FaArrowDown className="w-4 h-4" />
-                    ) : (
-                      <FaArrowUp className="w-4 h-4" />
-                    )}
-                  </div>
-                  <div>
-                    <p className="font-medium">{tx.title}</p>
-                    <p className="text-xs text-slate-400">{tx.date}</p>
-                  </div>
-                </div>
-                <p
-                  className={`font-semibold ${
-                    tx.type === "credit" ? "text-green-400" : "text-red-400"
-                  }`}
-                >
-                  {tx.type === "credit" ? "+" : "-"}₦{tx.amount.toLocaleString()}
-                </p>
-              </div>
-            ))}
+        {/* Bank Transfer */}
+        <div className="rounded-2xl bg-silver-50 p-4 text-secondary-900 shadow">
+          <div className="flex items-center justify-between">
+            <h3 className="mb-4 text-lg font-semibold">
+              Bank Transfer Deposit
+            </h3>
+            <button
+              onClick={() =>
+                copy(wallet?.bank?.accountNumber, "bank")
+              }
+              className="rounded-md bg-primary-900 px-3 py-1.5 text-xs font-medium text-secondary-100"
+            >
+              {copied === "bank" ? "Copied" : "Copy"}
+            </button>
+          </div>
+
+          <div className="rounded-xl bg-gray-50 p-4 text-sm">
+            <InfoRow label="Bank" value={wallet?.bank?.name} />
+            <InfoRow
+              label="Account Name"
+              value={wallet?.bank?.accountName}
+            />
+
+            <div className="mt-2 flex items-center justify-between">
+              <span className="text-secondary-500">
+                Account Number
+              </span>
+              <span className="font-mono text-sm font-semibold">
+                {wallet?.bank?.accountNumber ?? "—"}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Crypto Wallets */}
+      <section className="mt-5">
+        <h2 className="mb-4 text-xl font-semibold text-secondary-900">
+          Crypto Deposit Wallets
+        </h2>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {cryptoWallets.map((crypto) => (
+            <div
+              key={crypto.symbol}
+              className="rounded-2xl bg-silver-50 p-4 shadow"
+            >
+              <div className="mb-2 flex items-center justify-between">
+                <h3 className="font-semibold text-secondary-600">
+                  {crypto.name}
+                </h3>
+                <span className="rounded bg-secondary-600 px-2 py-1 text-xs text-white">
+                  {crypto.symbol}
+                </span>
+              </div>
+
+              <p className="mb-2 text-xs text-secondary-900">
+                Network: {crypto.network}
+              </p>
+
+              <div className="break-all rounded bg-secondary-100 p-3 font-mono text-xs text-primary-950">
+                {crypto.address}
+              </div>
+
+              <div className="mt-2 rounded-lg bg-red-50 p-2 text-xs text-red-600">
+                ⚠️ {crypto.warning}
+              </div>
+
+              <div className="mt-3 flex items-center justify-between">
+                <p className="text-xs text-secondary-900">
+                  Min deposit: {crypto.minDeposit}
+                </p>
+                <button
+                  onClick={() =>
+                    copy(crypto.address, crypto.symbol)
+                  }
+                  className="rounded-md bg-primary-900 px-3 py-1.5 text-sm font-medium text-secondary-100"
+                >
+                  {copied === crypto.symbol
+                    ? "Copied"
+                    : "Copy Address"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*                               Components                                   */
+/* -------------------------------------------------------------------------- */
+
+function InfoRow({ label, value }) {
+  return (
+    <div className="flex justify-between py-1">
+      <span className="text-secondary-500">{label}</span>
+      <span className="font-medium">{value ?? "—"}</span>
     </div>
   );
 }

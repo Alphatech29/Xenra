@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
@@ -36,7 +36,6 @@ export default function LoginPage() {
       setFormData({ identifier: "", password: "" });
       setShowPassword(false);
 
-      // 🔑 middleware + cookies take over
       router.replace("/dashboard");
     }
   }, [success, router]);
@@ -96,7 +95,8 @@ export default function LoginPage() {
                 Join Xenra Community <span>↗</span>
               </p>
               <p className="text-xs text-silver-900 mt-2">
-                Access support, share insights and stay in the know effortlessly.
+                Access support, share insights and stay in the know
+                effortlessly.
               </p>
             </div>
           </div>
@@ -109,7 +109,8 @@ export default function LoginPage() {
               Login to Your account
             </h2>
             <p className="text-silver-700">
-              Please enter your email address and password to access your account.
+              Please enter your email address and password to access your
+              account.
             </p>
           </div>
 
@@ -147,7 +148,7 @@ export default function LoginPage() {
             <Button
               type="submit"
               disabled={loading}
-              className={`bg-primary-950 hover:bg-primary-900 text-white flex items-center justify-center gap-2 ${
+              className={`bg-primary-950 hover:bg-primary-900 text-white flex w-full rounded-lg items-center justify-center gap-2 ${
                 loading ? "opacity-70 cursor-not-allowed" : ""
               }`}
             >
@@ -165,9 +166,12 @@ export default function LoginPage() {
           <div className="text-center mt-4">
             <p className="text-sm text-gray-500 mb-6">
               Don’t have an account?{" "}
-              <span className="text-[#0b0196] font-medium cursor-pointer">
+              <Link
+                href="/auth/register"
+                className="text-[#0b0196] font-medium hover:underline"
+              >
                 Sign Up
-              </span>
+              </Link>
             </p>
           </div>
         </div>

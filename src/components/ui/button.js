@@ -12,8 +12,8 @@ export default function Button({
       type={type}
       disabled={disabled}
       className={`
-        w-full bg-(--color-primary) text-white py-3
-        rounded-lg font-semibold transition
+        bg-primary-950 text-white py-3
+         font-semibold transition
         hover:opacity-90
         focus:outline-none
         disabled:opacity-60 disabled:cursor-not-allowed

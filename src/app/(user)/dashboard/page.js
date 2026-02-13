@@ -1,80 +1,110 @@
+"use client";
+
+import Link from "next/link";
+import { FiDownload, FiSend } from "react-icons/fi";
+import { TfiExchangeVertical } from "react-icons/tfi";
+import { RiBtcFill, RiSimCardFill } from "react-icons/ri";
+import { HiMiniShoppingBag } from "react-icons/hi2";
+import TransactionHistory from "../../../components/ui/transactionHistory";
+import useUserWallet from "../../../hooks/userWalletHooks";
+import { useAuth } from "../../../lib/authContext";
+import { formatNaira } from "../../../lib/formatNaira";
+
 export default function DashboardPage() {
+  const { wallet } = useUserWallet();
+  const { user } = useAuth();
+
+  // Safely extract balance
+  const balance = wallet?.available_balance ?? 0;
+
   return (
-    <div className="flex min-h-screen bg-gray-100">
-
+    <main className="flex min-h-screen">
       {/* Main Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col p-4 space-y-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-secondary-900">
+            Welcome back,
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            {user?.username}! Here's your wallet overview.
+          </p>
+        </div>
+        <div className="flex justify-center items-center space-x-5">
+          <div className="bg-silver-50 h-52 w-full rounded-xl p-6 shadow-sm flex flex-col justify-between">
+            {/* Content */}
+            <div className="flex flex-col items-start justify-center flex-1 text-secondary-900">
+              <p className="text-xs font-semibold tracking-wide text-secondary-900 mb-2">
+                Available Balance
+              </p>
 
-        {/* Content */}
-        <main className="p-6 space-y-8">
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-white p-5 rounded-xl shadow-sm">
-              <p className="text-sm text-gray-500">Total Users</p>
-              <h2 className="text-2xl font-bold mt-1">1,240</h2>
-            </div>
-
-            <div className="bg-white p-5 rounded-xl shadow-sm">
-              <p className="text-sm text-gray-500">Revenue</p>
-              <h2 className="text-2xl font-bold mt-1">₦4.2M</h2>
-            </div>
-
-            <div className="bg-white p-5 rounded-xl shadow-sm">
-              <p className="text-sm text-gray-500">Transactions</p>
-              <h2 className="text-2xl font-bold mt-1">8,312</h2>
-            </div>
-
-            <div className="bg-white p-5 rounded-xl shadow-sm">
-              <p className="text-sm text-gray-500">Growth</p>
-              <h2 className="text-2xl font-bold mt-1 text-green-600">+12%</h2>
-            </div>
-          </div>
-
-          {/* Charts Placeholder */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white h-64 rounded-xl shadow-sm p-6">
-              <p className="text-sm text-gray-500 mb-2">Revenue Overview</p>
-              <div className="h-full flex items-center justify-center text-gray-400">
-                Chart goes here
+              <div className="flex text-right items-baseline gap-1">
+                <span className="text-lg font-semibold">₦</span>
+                <span className="text-3xl font-bold">
+                  {formatNaira(balance)}
+                </span>
               </div>
             </div>
+            <div className="flex gap-4">
+              {/* Deposit */}
+              <Link
+                href="/dashboard/wallet"
+                className="flex items-center justify-between gap-3 rounded-lg border border-primary-200 bg-white px-4 py-2 text-sm font-medium text-secondary-900 transition hover:bg-primary-200 hover:text-primary-950"
+              >
+                Deposit Funds
+                <FiDownload className="text-base" />
+              </Link>
 
-            <div className="bg-white h-64 rounded-xl shadow-sm p-6">
-              <p className="text-sm text-gray-500 mb-2">User Growth</p>
-              <div className="h-full flex items-center justify-center text-gray-400">
-                Chart goes here
-              </div>
+              {/* Send */}
+              <Link
+                href="/dashboard/wallet"
+                className="flex items-center justify-between gap-3 rounded-lg border border-primary-200 bg-white px-4 py-2 text-sm font-medium text-secondary-900 transition hover:bg-primary-200 hover:text-primary-950"
+              >
+                Send Funds
+                <FiSend className="text-base" />
+              </Link>
+              <Link
+                href="/dashboard/convert"
+                className="flex items-center justify-between gap-3 rounded-lg border border-primary-200 bg-white px-4 py-2 text-sm font-medium text-secondary-900 transition hover:bg-primary-200 hover:text-primary-950"
+              >
+                Convert
+                <TfiExchangeVertical className="text-base" />
+              </Link>
             </div>
           </div>
 
-          {/* Table */}
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-gray-500">
-                <tr>
-                  <th className="text-left p-4">User</th>
-                  <th className="text-left p-4">Status</th>
-                  <th className="text-left p-4">Amount</th>
-                  <th className="text-left p-4">Date</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <tr key={i} className="border-t">
-                    <td className="p-4">John Doe</td>
-                    <td className="p-4 text-green-600">Completed</td>
-                    <td className="p-4">₦120,000</td>
-                    <td className="p-4 text-gray-500">Jan 20, 2026</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className=" h-52 w-full space-y-3.5">
+            <div className="flex items-center bg-secondary-500/30 justify-start gap-3 rounded-lg border border-primary-200  px-4 py-3 text-sm font-medium text-secondary-900 transition ">
+              <RiBtcFill className="text-[35px] text-secondary-100 bg-secondary-500 rounded-full p-2" />
+              <Link href="/dashboard/cryprto">Trade Crypto Currency</Link>
+            </div>
+            <div className="flex items-center bg-primary-200/30 justify-start gap-3 rounded-lg border border-primary-200  px-4 py-3 text-sm font-medium text-secondary-900 transition ">
+              <HiMiniShoppingBag className="text-[35px] text-secondary-100 bg-primary-900 rounded-full p-2" />
+              <Link href="/dashboard/buy-gift-cards">Buy Gift Cards</Link>
+            </div>
+            <div className="flex items-center bg-green-200/30 justify-start gap-3 rounded-lg border border-primary-200  px-4 py-3 text-sm font-medium text-secondary-900 transition ">
+              <HiMiniShoppingBag className="text-[35px] text-secondary-100 bg-green-600 rounded-full p-2" />
+              <Link href="/dashboard/sell-gift-cards">Sell Gift Cards</Link>
+            </div>
           </div>
-
-        </main>
+        </div>
+        <div>
+          <div className="flex w-full justify-center items-center gap-3">
+            <div className="flex w-full items-center bg-secondary-500/30 justify-start gap-3 rounded-lg border border-primary-200  px-4 py-3 text-sm font-medium text-secondary-900 transition ">
+              <RiSimCardFill className="text-[35px] text-secondary-100 bg-secondary-500 rounded-full p-2" />
+              <Link href="/dashboard/cryprto">e-SIM</Link>
+            </div>
+            <div className="flex w-full items-center bg-secondary-500/30 justify-start gap-3 rounded-lg border border-primary-200  px-4 py-3 text-sm font-medium text-secondary-900 transition ">
+              <RiSimCardFill className="text-[35px] text-secondary-100 bg-secondary-500 rounded-full p-2" />
+              <Link href="/dashboard/bills">Bills</Link>
+            </div>
+            <div className="flex w-full items-center bg-secondary-500/30 justify-start gap-3 rounded-lg border border-primary-200  px-4 py-3 text-sm font-medium text-secondary-900 transition ">
+              <RiSimCardFill className="text-[35px] text-secondary-100 bg-secondary-500 rounded-full p-2" />
+              <Link href="/dashboard/cryprto">e-SIM</Link>
+            </div>
+          </div>
+        </div>
+        <TransactionHistory />
       </div>
-    </div>
+    </main>
   );
 }

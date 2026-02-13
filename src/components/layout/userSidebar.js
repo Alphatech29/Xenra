@@ -9,6 +9,7 @@ import {
   LuCreditCard,
   LuSettings,
   LuWallet,
+  LuSmartphone,
 } from "react-icons/lu";
 
 export default function Sidebar() {
@@ -19,14 +20,23 @@ export default function Sidebar() {
     { label: "Wallet", href: "/dashboard/wallet", icon: LuWallet },
     { label: "Analytics", href: "/dashboard/analytics", icon: LuChartBar },
     { label: "Users", href: "/dashboard/users", icon: LuUsers },
-    { label: "Transactions", href: "/dashboard/transactions", icon: LuCreditCard },
+    {
+      label: "Telecom Recharge",
+      href: "/dashboard/telecom",
+      icon: LuSmartphone,
+    },
+    {
+      label: "Transactions",
+      href: "/dashboard/transactions",
+      icon: LuCreditCard,
+    },
     { label: "Settings", href: "/dashboard/settings", icon: LuSettings },
   ];
 
   return (
-    <aside className="hidden md:flex w-64 bg-primary-950 border-r flex-col min-h-screen">
+    <aside className="hidden md:flex w-64 bg-primary-50 flex-col min-h-screen border-r border-secondary-300">
       {/* Logo */}
-      <div className="px-6 py-4 text-xl font-bold tracking-wide text-secondary-100 border-b border-secondary-800">
+      <div className="px-6 py-4.25 text-xl font-bold tracking-wide text-secondary-500 border-b border-secondary-300">
         XENRA
       </div>
 
@@ -45,14 +55,14 @@ export default function Sidebar() {
               key={item.href}
               href={item.href}
               aria-current={isActive ? "page" : undefined}
-              className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-[16px] font-medium transition
+              className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-[15px] font-medium transition
                 ${
                   isActive
-                    ? "bg-secondary-400 text-silver-100"
-                    : "text-silver-300 hover:bg-silver-200 hover:text-silver-900"
+                    ? "bg-primary-200 text-primary-900"
+                    : "text-secondary-500 hover:bg-secondary-200 hover:text-secondary-900"
                 }`}
             >
-              <Icon size={18} className="text-silver-300" />
+              <Icon size={18} className="text-secondary-500" />
               <span>{item.label}</span>
             </Link>
           );

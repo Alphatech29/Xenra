@@ -1,4 +1,6 @@
 // hooks/useLogin.js
+"use client";
+
 import { useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
@@ -18,7 +20,7 @@ export function useLogin() {
     setData(null);
 
     try {
-      const res = await fetch(`${API_URL}/auth/login`, {
+      const res = await fetch(`${API_URL}/api/v1/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -27,15 +29,18 @@ export function useLogin() {
         body: JSON.stringify(payload),
       });
 
-      //  Log HTTP status
-      console.log("Backend response status:", res.status);
+      console.log("Login HTTP status:", res.status);
+
+      // Protect against non-JSON responses
+      const contentType = res.headers.get("content-type");
+      if (!contentType?.includes("application/json")) {
+        throw new Error("Invalid server response");
+      }
 
       const result = await res.json();
+      console.log("Login response body:", result);
 
-      //  Log response body
-      console.log("Backend response body:", result);
-
-      if (!res.ok || result.success === false) {
+      if (!res.ok || result.success !== true) {
         setError(result.error || "Login failed");
         return null;
       }

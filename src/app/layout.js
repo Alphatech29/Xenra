@@ -9,8 +9,16 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"],
 });
 
+/**
+ * Root metadata
+ * - Default title for the entire app
+ * - Title template allows child layouts/pages to override the title
+ */
 export const metadata = {
-  title: "Xenra - Global Digital Financial Services",
+  title: {
+    default: "Xenra - Global Digital Financial Services",
+    template: "%s | Xenra",
+  },
   description:
     "Digital financial services platform providing secure solutions for global transactions, gift card trading, and cryptocurrency exchange.",
 };

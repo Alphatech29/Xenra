@@ -18,7 +18,7 @@ export async function middleware(req) {
 
   // Rotate token ONLY on protected routes
   if (!accessToken && refreshToken && isProtectedRoute) {
-    const refreshRes = await fetch(`${API_URL}/auth/refresh`, {
+    const refreshRes = await fetch(`${API_URL}/api/v1/auth/refresh`, {
       method: "POST",
       headers: {
         cookie: req.headers.get("cookie") || "",
